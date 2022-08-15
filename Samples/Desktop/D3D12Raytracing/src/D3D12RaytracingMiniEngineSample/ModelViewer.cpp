@@ -272,7 +272,7 @@ enum RaytracingMode
     RTM_DIFFUSE_WITH_SHADOWRAYS,
     RTM_REFLECTIONS,
 };
-EnumVar rayTracingMode("Application/Raytracing/RayTraceMode", RTM_DIFFUSE_WITH_SHADOWMAPS, _countof(rayTracingModes), rayTracingModes);
+EnumVar rayTracingMode("Application/Raytracing/RayTraceMode", RTM_REFLECTIONS, _countof(rayTracingModes), rayTracingModes);
 
 class DescriptorHeapStack
 {

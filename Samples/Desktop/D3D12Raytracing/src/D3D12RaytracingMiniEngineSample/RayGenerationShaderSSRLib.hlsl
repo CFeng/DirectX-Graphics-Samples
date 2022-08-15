@@ -53,7 +53,7 @@ void RayGen()
 
     // R
     float3 direction = normalize(-primaryRayDirection - 2 * dot(-primaryRayDirection, normal) * normal);
-    float3 origin = world - primaryRayDirection * 0.1f;     // Lift off the surface a bit
+    float3 origin = world - direction * 0.1f;     // Lift off the surface a bit
 
     RayDesc rayDesc = { origin,
         0.0f,

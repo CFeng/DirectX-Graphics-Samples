@@ -180,6 +180,7 @@
       <AdditionalLibraryDirectories>..\..\..\..\..\Packages\zlib-msvc-x64.1.2.11.8900\build\native\lib_release;..\..\..\..\..\Packages\directxtex_desktop_win10.2019.2.7.1\lib\x64\Release;..\..\..\..\..\Packages\directxmesh_desktop_win10.2019.2.7.1\lib\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>zlibstatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/nodefaultlib:LIBCMT %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>

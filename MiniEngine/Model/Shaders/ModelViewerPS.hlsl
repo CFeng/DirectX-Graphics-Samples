@@ -37,7 +37,7 @@ struct VSOutput
 struct MRT
 {
 	float3 Color : SV_Target0;
-	float3 Normal : SV_Target1;
+	float4 Normal : SV_Target1;
 };
 
 [RootSignature(Renderer_RootSig)]
@@ -79,7 +79,7 @@ MRT main(VSOutput vsOutput)
 		vsOutput.worldPos
 		);
 
-	mrt.Normal = normal;
+    mrt.Normal = float4(normal, specularMask);
 	mrt.Color = colorSum;
 	return mrt;
 }

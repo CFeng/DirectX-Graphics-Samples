@@ -29,8 +29,8 @@ FlyingFPSCamera::FlyingFPSCamera( Camera& camera, Vector3 worldUp ) : CameraCont
     m_VerticalLookSensitivity = 2.0f;
     m_MoveSpeed = 1000.0f;
     m_StrafeSpeed = 1000.0f;
-    m_MouseSensitivityX = 1.0f;
-    m_MouseSensitivityY = 1.0f;
+    m_MouseSensitivityX = 0.05f;
+    m_MouseSensitivityY = 0.05f;
 
     m_CurrentPitch = Sin(Dot(camera.GetForwardVec(), m_WorldUp));
 
@@ -96,9 +96,12 @@ void FlyingFPSCamera::Update( float deltaTime )
         ApplyMomentum(m_LastAscent, ascent, deltaTime);
     }
 
-    // don't apply momentum to mouse inputs
-    yaw += GameInput::GetAnalogInput(GameInput::kAnalogMouseX) * m_MouseSensitivityX;
-    pitch += GameInput::GetAnalogInput(GameInput::kAnalogMouseY) * m_MouseSensitivityY;
+    if (GameInput::IsPressed(GameInput::kMouse0))
+    {
+        // don't apply momentum to mouse inputs
+        yaw += GameInput::GetAnalogInput(GameInput::kAnalogMouseX) * m_MouseSensitivityX;
+        pitch += GameInput::GetAnalogInput(GameInput::kAnalogMouseY) * m_MouseSensitivityY;
+    }
 
     m_CurrentPitch += pitch;
     m_CurrentPitch = XMMin( XM_PIDIV2, m_CurrentPitch);
