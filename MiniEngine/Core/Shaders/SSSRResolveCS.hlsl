@@ -107,6 +107,7 @@ void main(uint3 DTid : SV_DispatchThreadID, uint GI : SV_GroupIndex, uint3 GTid 
 		// Now we fetch the intersection point and the PDF that the neighbor's ray hit.
 		float4 hitPacked = _RayCast.SampleLevel(PointSampler, neighborUv, 0);
 		float2 hitUv = hitPacked.xy;
+		hitUv.y = 1 - hitUv.y;	// Hack!!
 		float hitZ = hitPacked.z;
 		float hitPDF = hitPacked.w;
 		float hitMask = _RayCastMask.SampleLevel(PointSampler, neighborUv, 0).r;

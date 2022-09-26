@@ -71,7 +71,8 @@ float GetDepth(float2 uv)
 
 float3 GetScreenPos(float2 uv, float depth)
 {
-	return float3(uv.x * 2 - 1, (1 - uv.y) * 2 - 1, depth);
+	//return float3(uv.xy * 2 - 1, depth);
+	return float3(uv.x * 2 - 1, (1 - uv.y) * 2 - 1, depth);	// HACK!!
 }
 
 float3 GetWorlPos(float3 screenPos)

@@ -33,6 +33,7 @@
 #include "ModelLoader.h"
 #include "ShadowCamera.h"
 #include "Display.h"
+#include "SSSR.h"
 
 #define LEGACY_RENDERER
 
@@ -47,13 +48,17 @@ class ModelViewer : public GameCore::IGameApp
 {
 public:
 
-    ModelViewer( void ) {}
+    ModelViewer( void )
+    {
+        LoadLibraryA("renderdoc.dll");
+    }
 
     virtual void Startup( void ) override;
     virtual void Cleanup( void ) override;
 
     virtual void Update( float deltaT ) override;
     virtual void RenderScene( void ) override;
+    virtual void RenderUI(class GraphicsContext& uiContext) override;
 
 private:
 
@@ -185,6 +190,14 @@ void ModelViewer::Startup( void )
 
         MotionBlur::Enable = false;
     }
+
+    // HACK!!
+    const float D2R = 3.1415926535897932384626433832795f / 180;
+    m_Camera.SetFOV(60 * D2R);
+    m_Camera.SetPosition(Vector3(-387.6143, 81.39775, -15.60718));
+    m_Camera.SetRotation(Quaternion(-10 * D2R, (56 + 70) * D2R, 0));
+    //m_Camera.SetEyeAtUp(Vector3(0, 0, 0), Vector3(0, 0, -1), Vector3(0, 1, 0));
+    ///////////////////////////////////////////////////////////////
 
     m_Camera.SetZRange(1.0f, 10000.0f);
     if (gltfFileName.size() == 0)
@@ -350,6 +363,8 @@ void ModelViewer::RenderScene( void )
     // is necessary for all temporal effects (and motion blur).
     MotionBlur::GenerateCameraVelocityBuffer(gfxContext, m_Camera, true);
 
+    SSSR::Render(gfxContext, m_Camera);
+
     TemporalEffects::ResolveImage(gfxContext);
 
     ParticleEffectManager::Render(gfxContext, m_Camera, g_SceneColorBuffer, g_SceneDepthBuffer,  g_LinearDepth[FrameIndex]);
@@ -361,4 +376,9 @@ void ModelViewer::RenderScene( void )
         MotionBlur::RenderObjectBlur(gfxContext, g_VelocityBuffer);
 
     gfxContext.Finish();
+}
+
+void ModelViewer::RenderUI(class GraphicsContext& uiContext)
+{
+    SSSR::DebugOverlay(uiContext);
 }

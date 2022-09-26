@@ -23,6 +23,8 @@ namespace Graphics
 {
     extern DepthBuffer g_SceneDepthBuffer;  // D32_FLOAT_S8_UINT
     extern ColorBuffer g_SceneColorBuffer;  // R11G11B10_FLOAT
+    extern ColorBuffer g_SceneDiffuseOcclusionBuffer;  // R10G10B10A2_UNORM
+    extern ColorBuffer g_SceneSpecularSmoothnessBuffer;  // R8G8B8A8_UNORM
     extern ColorBuffer g_SceneNormalBuffer; // R16G16B16A16_FLOAT
     extern ColorBuffer g_PostEffectsBuffer; // R32_UINT (to support Read-Modify-Write with a UAV)
     extern ColorBuffer g_OverlayBuffer;     // R8G8B8A8_UNORM
@@ -80,6 +82,18 @@ namespace Graphics
     extern ByteAddressBuffer g_Histogram;
     extern ByteAddressBuffer g_FXAAWorkQueue;
     extern TypedBuffer g_FXAAColorQueue;
+
+    extern ColorBuffer g_SSSRMainBuffer0;  // R11G11B10_FLOAT
+    extern ColorBuffer g_SSSRMainBuffer1;  // R11G11B10_FLOAT
+    extern ColorBuffer g_SSSRRayCast;  // R16G16B16A16_FLOAT
+    extern ColorBuffer g_SSSRRayCastMask;  // R16_FLOAT
+    //extern ColorBuffer g_SSSRMipMapBuffer0;
+    //extern ColorBuffer g_SSSRMipMapBuffer1;
+    extern ColorBuffer g_SSSRMipMapBuffer2;
+    extern ColorBuffer g_SSSRResolvePass;
+    extern ColorBuffer g_SSSRTemporalBuffer;
+    extern ColorBuffer g_SSSRTemporalBuffer0;
+
 
     void InitializeRenderingBuffers(uint32_t NativeWidth, uint32_t NativeHeight );
     void ResizeDisplayDependentBuffers(uint32_t NativeWidth, uint32_t NativeHeight);

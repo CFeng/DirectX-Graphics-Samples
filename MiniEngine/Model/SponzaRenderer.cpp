@@ -71,6 +71,8 @@ namespace Sponza
 void Sponza::Startup( Camera& Camera )
 {
     DXGI_FORMAT ColorFormat = g_SceneColorBuffer.GetFormat();
+    DXGI_FORMAT DiffuseOcclusionFormat = g_SceneDiffuseOcclusionBuffer.GetFormat();
+    DXGI_FORMAT SpecularSmoothnessFormat = g_SceneSpecularSmoothnessBuffer.GetFormat();
     DXGI_FORMAT NormalFormat = g_SceneNormalBuffer.GetFormat();
     DXGI_FORMAT DepthFormat = g_SceneDepthBuffer.GetFormat();
     //DXGI_FORMAT ShadowFormat = g_ShadowBuffer.GetFormat();
@@ -113,13 +115,13 @@ void Sponza::Startup( Camera& Camera )
     m_CutoutShadowPSO.SetRasterizerState(RasterizerShadowTwoSided);
     m_CutoutShadowPSO.Finalize();
 
-    DXGI_FORMAT formats[2] = { ColorFormat, NormalFormat };
+    DXGI_FORMAT formats[] = { ColorFormat, DiffuseOcclusionFormat, SpecularSmoothnessFormat, NormalFormat };
 
     // Full color pass
     m_ModelPSO = m_DepthPSO;
     m_ModelPSO.SetBlendState(BlendDisable);
     m_ModelPSO.SetDepthStencilState(DepthStateTestEqual);
-    m_ModelPSO.SetRenderTargetFormats(2, formats, DepthFormat);
+    m_ModelPSO.SetRenderTargetFormats(_countof(formats), formats, DepthFormat);
     m_ModelPSO.SetVertexShader( g_pModelViewerVS, sizeof(g_pModelViewerVS) );
     m_ModelPSO.SetPixelShader( g_pModelViewerPS, sizeof(g_pModelViewerPS) );
     m_ModelPSO.Finalize();
@@ -335,8 +337,11 @@ void Sponza::RenderScene(
             ScopedTimer _prof(L"Main Render", gfxContext);
             {
                 gfxContext.TransitionResource(g_SceneColorBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
+                gfxContext.TransitionResource(g_SceneDiffuseOcclusionBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
+                gfxContext.TransitionResource(g_SceneSpecularSmoothnessBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
                 gfxContext.TransitionResource(g_SceneNormalBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
                 gfxContext.ClearColor(g_SceneColorBuffer);
+                gfxContext.ClearColor(g_SceneDiffuseOcclusionBuffer);
             }
         }
     }
@@ -386,7 +391,7 @@ void Sponza::RenderScene(
                 {
                     gfxContext.SetPipelineState(m_ModelPSO);
                     gfxContext.TransitionResource(g_SceneDepthBuffer, D3D12_RESOURCE_STATE_DEPTH_READ);
-                    D3D12_CPU_DESCRIPTOR_HANDLE rtvs[]{ g_SceneColorBuffer.GetRTV(), g_SceneNormalBuffer.GetRTV() };
+                    D3D12_CPU_DESCRIPTOR_HANDLE rtvs[]{ g_SceneColorBuffer.GetRTV(), g_SceneDiffuseOcclusionBuffer.GetRTV(), g_SceneSpecularSmoothnessBuffer.GetRTV(), g_SceneNormalBuffer.GetRTV() };
                     gfxContext.SetRenderTargets(ARRAYSIZE(rtvs), rtvs, g_SceneDepthBuffer.GetDSV_DepthReadOnly());
                     gfxContext.SetViewportAndScissor(viewport, scissor);
                 }

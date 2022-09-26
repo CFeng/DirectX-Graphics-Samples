@@ -22,6 +22,8 @@ namespace Graphics
 {
     DepthBuffer g_SceneDepthBuffer;
     ColorBuffer g_SceneColorBuffer;
+    ColorBuffer g_SceneDiffuseOcclusionBuffer;
+    ColorBuffer g_SceneSpecularSmoothnessBuffer;
     ColorBuffer g_SceneNormalBuffer;
     ColorBuffer g_PostEffectsBuffer;
     ColorBuffer g_VelocityBuffer;
@@ -82,7 +84,19 @@ namespace Graphics
     // For testing GenerateMipMaps()
     ColorBuffer g_GenMipsBuffer;
 
+    ColorBuffer g_SSSRMainBuffer0;
+    ColorBuffer g_SSSRMainBuffer1;
+    ColorBuffer g_SSSRRayCast;
+    ColorBuffer g_SSSRRayCastMask;
+    //ColorBuffer g_SSSRMipMapBuffer0;
+    //ColorBuffer g_SSSRMipMapBuffer1;
+    ColorBuffer g_SSSRMipMapBuffer2;
+    ColorBuffer g_SSSRResolvePass;
+    ColorBuffer g_SSSRTemporalBuffer;
+    ColorBuffer g_SSSRTemporalBuffer0;
+
     DXGI_FORMAT DefaultHdrColorFormat = DXGI_FORMAT_R11G11B10_FLOAT;
+    DXGI_FORMAT SSSRDefaultHdrColorFormat = DXGI_FORMAT_R16G16B16A16_FLOAT;
 }
 
 #define T2X_COLOR_FORMAT DXGI_FORMAT_R10G10B10A2_UNORM
@@ -111,6 +125,8 @@ void Graphics::InitializeRenderingBuffers( uint32_t bufferWidth, uint32_t buffer
     esram.PushStack();
 
         g_SceneColorBuffer.Create( L"Main Color Buffer", bufferWidth, bufferHeight, 1, DefaultHdrColorFormat, esram );
+        g_SceneDiffuseOcclusionBuffer.Create(L"Diffuse Occlusion Buffer", bufferWidth, bufferHeight, 1, DXGI_FORMAT_R10G10B10A2_UNORM, esram);
+        g_SceneSpecularSmoothnessBuffer.Create(L"Specular Smoothness Buffer", bufferWidth, bufferHeight, 1, DXGI_FORMAT_R8G8B8A8_UNORM, esram);
         g_SceneNormalBuffer.Create( L"Normals Buffer", bufferWidth, bufferHeight, 1, DXGI_FORMAT_R16G16B16A16_FLOAT, esram );
         g_VelocityBuffer.Create( L"Motion Vectors", bufferWidth, bufferHeight, 1, DXGI_FORMAT_R32_UINT );
         g_PostEffectsBuffer.Create( L"Post Effects Buffer", bufferWidth, bufferHeight, 1, DXGI_FORMAT_R32_UINT );
@@ -183,6 +199,24 @@ void Graphics::InitializeRenderingBuffers( uint32_t bufferWidth, uint32_t buffer
                     g_MotionPrepBuffer.Create( L"Motion Blur Prep", bufferWidth1, bufferHeight1, 1, HDR_MOTION_FORMAT, esram );
                 esram.PopStack();	// End motion blur
 
+                esram.PushStack();	// Begin SSSR
+                    g_SSSRMainBuffer0.Create(L"SSSR Main Buffer 0", bufferWidth, bufferHeight, 1, DefaultHdrColorFormat, esram);
+                    g_SSSRMainBuffer1.Create(L"SSSR Main Buffer 1", bufferWidth, bufferHeight, 1, DefaultHdrColorFormat, esram);
+
+                    uint32_t rayWidth = bufferWidth / 2, rayHeight = bufferHeight / 2;
+                    g_SSSRRayCast.Create(L"SSSR Ray Cast", rayWidth, rayHeight, 1, DXGI_FORMAT_R16G16B16A16_FLOAT, esram);
+                    g_SSSRRayCastMask.Create(L"SSSR Ray Cast Mask", rayWidth, rayHeight, 1, DXGI_FORMAT_R16_FLOAT, esram);
+
+                    //g_SSSRMipMapBuffer0.Create(L"SSSR Mip Map Buffer 0", bufferWidth, bufferHeight, 5, DefaultHdrColorFormat, esram);
+                    //g_SSSRMipMapBuffer1.Create(L"SSSR Mip Map Buffer 1", bufferWidth, bufferHeight, 1, DefaultHdrColorFormat, esram);
+                    g_SSSRMipMapBuffer2.Create(L"SSSR Mip Map Buffer 2", bufferWidth, bufferHeight, 5, DefaultHdrColorFormat, esram);
+
+                    g_SSSRResolvePass.Create(L"SSSR Resolve Pass", bufferWidth, bufferHeight, 1, SSSRDefaultHdrColorFormat, esram);
+
+                    g_SSSRTemporalBuffer.Create(L"SSSR Temporal Buffer", bufferWidth, bufferHeight, 1, SSSRDefaultHdrColorFormat, esram);
+                    g_SSSRTemporalBuffer0.Create(L"SSSR Temporal Buffer 0", bufferWidth, bufferHeight, 1, SSSRDefaultHdrColorFormat, esram);
+                    esram.PopStack();	// End motion blur
+
             esram.PopStack();	// End opaque geometry
 
         esram.PopStack();	// End HDR image
@@ -245,6 +279,8 @@ void Graphics::DestroyRenderingBuffers()
 {
     g_SceneDepthBuffer.Destroy();
     g_SceneColorBuffer.Destroy();
+    g_SceneDiffuseOcclusionBuffer.Destroy();
+    g_SceneSpecularSmoothnessBuffer.Destroy();
     g_SceneNormalBuffer.Destroy();
     g_VelocityBuffer.Destroy();
     g_OverlayBuffer.Destroy();
@@ -313,4 +349,15 @@ void Graphics::DestroyRenderingBuffers()
     g_FXAAColorQueue.Destroy();
 
     g_GenMipsBuffer.Destroy();
+
+    g_SSSRMainBuffer0.Destroy();
+    g_SSSRMainBuffer1.Destroy();
+    g_SSSRRayCast.Destroy();
+    g_SSSRRayCastMask.Destroy();
+    //g_SSSRMipMapBuffer0.Destroy();
+    //g_SSSRMipMapBuffer1.Destroy();
+    g_SSSRMipMapBuffer2.Destroy();
+    g_SSSRResolvePass.Destroy();
+    g_SSSRTemporalBuffer.Destroy();
+    g_SSSRTemporalBuffer0.Destroy();
 }

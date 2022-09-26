@@ -93,8 +93,8 @@ void GenerateRandomOffset(float& offsetX, float& offsetY)
     offsetX = GetHaltonValue(s_SampleIndex & 1023, 2);
     offsetY = GetHaltonValue(s_SampleIndex & 1023, 3);
 
-    //if (++s_SampleIndex >= k_SampleCount)
-    //    s_SampleIndex = 0;
+    if (++s_SampleIndex >= k_SampleCount)
+        s_SampleIndex = 0;
 }
 
 void SSSR::Initialize( void )
@@ -417,8 +417,7 @@ void SSSR::Resolve(ComputeContext& Context, const Camera& camera, float jitterSa
     Context.SetDynamicDescriptor(1, 3, g_SceneDepthBuffer.GetDepthSRV());
     Context.SetDynamicDescriptor(1, 4, g_VelocityBuffer.GetSRV());
     Context.SetDynamicDescriptor(1, 5, s_NoiseTexture->GetSRV());
-    //Context.SetDynamicDescriptor(1, 6, g_SSSRMipMapBuffer2.GetSRV());
-    Context.SetDynamicDescriptor(1, 6, g_SceneColorBuffer.GetSRV());
+    Context.SetDynamicDescriptor(1, 6, g_SSSRMipMapBuffer2.GetSRV());
     Context.SetDynamicDescriptor(1, 7, g_SSSRRayCast.GetSRV());
     Context.SetDynamicDescriptor(1, 8, g_SSSRRayCastMask.GetSRV());
 
@@ -533,19 +532,19 @@ void SSSR::Combine(ComputeContext& Context, const Camera& camera)
 
 void SSSR::DebugOverlay(CommandContext& BaseContext)
 {
-    ScopedTimer _prof(L"DebugOverlay", BaseContext);
+    //ScopedTimer _prof(L"DebugOverlay", BaseContext);
 
-    ComputeContext& Context = BaseContext.GetComputeContext();
+    //ComputeContext& Context = BaseContext.GetComputeContext();
 
-    Context.SetRootSignature(s_RootSignature);
-    Context.SetPipelineState(s_DebugOverlayCS);
+    //Context.SetRootSignature(s_RootSignature);
+    //Context.SetPipelineState(s_DebugOverlayCS);
 
-    ColorBuffer& copyBuffer = g_SSSRResolvePass;
+    //ColorBuffer& copyBuffer = g_SSSRResolvePass;
 
-    Context.TransitionResource(copyBuffer, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
-    Context.TransitionResource(g_SceneColorBuffer, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
-    Context.SetDynamicDescriptor(1, 0, copyBuffer.GetSRV());
-    Context.SetDynamicDescriptor(2, 0, g_SceneColorBuffer.GetUAV());
+    //Context.TransitionResource(copyBuffer, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
+    //Context.TransitionResource(g_SceneColorBuffer, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+    //Context.SetDynamicDescriptor(1, 0, copyBuffer.GetSRV());
+    //Context.SetDynamicDescriptor(2, 0, g_SceneColorBuffer.GetUAV());
 
-    Context.Dispatch2D(copyBuffer.GetWidth() / 2, copyBuffer.GetHeight() / 2, 8, 8);
+    //Context.Dispatch2D(copyBuffer.GetWidth() / 2, copyBuffer.GetHeight() / 2, 8, 8);
 }

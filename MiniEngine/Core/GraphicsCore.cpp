@@ -31,6 +31,7 @@
 #include "GraphRenderer.h"
 #include "TemporalEffects.h"
 #include "Display.h"
+#include "SSSR.h"
 
 #pragma comment(lib, "d3d12.lib") 
 
@@ -410,6 +411,7 @@ void Graphics::Initialize(bool RequireDXRSupport)
     TextRenderer::Initialize();
     GraphRenderer::Initialize();
     ParticleEffectManager::Initialize(3840, 2160);
+    SSSR::Initialize();
 }
 
 void Graphics::Shutdown( void )
@@ -432,6 +434,7 @@ void Graphics::Shutdown( void )
     GraphRenderer::Shutdown();
     ParticleEffectManager::Shutdown();
     Display::Shutdown();
+    SSSR::Shutdown();
 
 #if defined(_GAMING_DESKTOP) && defined(_DEBUG)
     ID3D12DebugDevice* debugInterface;

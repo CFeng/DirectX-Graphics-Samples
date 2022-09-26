@@ -121,6 +121,7 @@
     <ClInclude Include="ShadowBuffer.h" />
     <ClInclude Include="ShadowCamera.h" />
     <ClInclude Include="SSAO.h" />
+    <ClInclude Include="SSSR.h" />
     <ClInclude Include="SystemTime.h" />
     <ClInclude Include="TemporalEffects.h" />
     <ClInclude Include="TextRenderer.h" />
@@ -181,6 +182,7 @@
     <ClCompile Include="ShadowBuffer.cpp" />
     <ClCompile Include="ShadowCamera.cpp" />
     <ClCompile Include="SSAO.cpp" />
+    <ClCompile Include="SSSR.cpp" />
     <ClCompile Include="SystemTime.cpp" />
     <ClCompile Include="TemporalEffects.cpp" />
     <ClCompile Include="TextRenderer.cpp" />
@@ -388,6 +390,12 @@
       <ShaderType>Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Shaders\SharpenTAACS.hlsl" />
+    <FxCompile Include="Shaders\SSSRCombineCS.hlsl" />
+    <FxCompile Include="Shaders\SSSRDebugOverlayCS.hlsl" />
+    <FxCompile Include="Shaders\SSSRRayCastCS.hlsl" />
+    <FxCompile Include="Shaders\SSSRRecursiveCS.hlsl" />
+    <FxCompile Include="Shaders\SSSRResolveCS.hlsl" />
+    <FxCompile Include="Shaders\SSSRTemporalCS.hlsl" />
     <FxCompile Include="Shaders\TemporalBlendCS.hlsl" />
     <FxCompile Include="Shaders\TextAntialiasPS.hlsl">
       <ShaderType>Pixel</ShaderType>
@@ -431,6 +439,7 @@
     <FxCompile Include="Shaders\UpsampleAndBlurCS.hlsl" />
     <None Include="Shaders\PixelPacking.hlsli" />
     <None Include="Shaders\SSAORS.hlsli" />
+    <None Include="Shaders\SSSRRS.hlsli" />
     <None Include="Shaders\TextRS.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

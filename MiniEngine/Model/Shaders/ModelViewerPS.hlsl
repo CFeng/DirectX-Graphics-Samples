@@ -37,7 +37,9 @@ struct VSOutput
 struct MRT
 {
 	float3 Color : SV_Target0;
-	float4 Normal : SV_Target1;
+	float4 DiffuseOcclusion : SV_Target1;
+	float4 SpecularSmoothness : SV_Target2;
+	float4 Normal : SV_Target3;
 };
 
 [RootSignature(Renderer_RootSig)]
@@ -79,6 +81,8 @@ MRT main(VSOutput vsOutput)
 		vsOutput.worldPos
 		);
 
+    mrt.DiffuseOcclusion = float4(diffuseAlbedo, 1);
+    mrt.SpecularSmoothness = float4(specularAlbedo, specularMask);
     mrt.Normal = float4(normal, specularMask);
 	mrt.Color = colorSum;
 	return mrt;
