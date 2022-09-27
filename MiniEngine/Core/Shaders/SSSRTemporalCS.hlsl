@@ -52,7 +52,7 @@ void main(uint3 DTid : SV_DispatchThreadID, uint GI : SV_GroupIndex, uint3 GTid 
 //		velocity = CalculateMotion(hitPacked.z, uv); // Reflection Depth derived motion. Removes smudghing cause by screen motion vectors.
 //	}
 //	else
-		velocity = GetVelocity(pos); // 5.4 motion vector
+		velocity = GetVelocity(pos) / _ScreenSize; // 5.4 motion vector
 
 	float2 prevUV = uv - velocity;
 

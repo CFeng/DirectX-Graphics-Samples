@@ -39,6 +39,6 @@ void main(uint3 DTid : SV_DispatchThreadID, uint GI : SV_GroupIndex, uint3 GTid 
 
     uint2 ST = DTid.xy;
     float3 Velocity = GetVelocity(ST);
-    uint2 prevST = ST - uint2(Velocity.xy * (_ScreenSize - 0.5));
+    uint2 prevST = ST - uint2(Velocity.xy);
     OutColor[ST] = _MainTex[prevST];
 }

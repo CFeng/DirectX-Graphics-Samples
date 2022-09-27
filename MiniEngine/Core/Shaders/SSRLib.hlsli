@@ -51,6 +51,7 @@ float3 GetNormal(float2 uv)
 
 float3 GetVelocity(uint2 st)
 {
+	// _CameraMotionVectorsTexture stores screen pixel number.
 	return UnpackVelocity(_CameraMotionVectorsTexture[st]);
 }
 
