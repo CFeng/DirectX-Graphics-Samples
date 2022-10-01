@@ -50,7 +50,9 @@ public:
 
     ModelViewer( void )
     {
+#if _DEBUG
         LoadLibraryA("renderdoc.dll");
+#endif
     }
 
     virtual void Startup( void ) override;
@@ -152,7 +154,7 @@ void LoadIBLTextures()
 void ModelViewer::Startup( void )
 {
     MotionBlur::Enable = true;
-    TemporalEffects::EnableTAA = true;
+    TemporalEffects::EnableTAA = false;
     FXAA::Enable = false;
     PostEffects::EnableHDR = true;
     PostEffects::EnableAdaptation = true;

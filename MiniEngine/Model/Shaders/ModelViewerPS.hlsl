@@ -82,7 +82,7 @@ MRT main(VSOutput vsOutput)
 		);
 
     mrt.DiffuseOcclusion = float4(diffuseAlbedo, 1);
-    mrt.SpecularSmoothness = float4(specularAlbedo, specularMask);
+    mrt.SpecularSmoothness = float4(specularAlbedo, specularMask) * normal.y;	// [HACK] Multiply normal.y to make sure only ground has reflection.
     mrt.Normal = float4(normal, specularMask);
 	mrt.Color = colorSum;
 	return mrt;

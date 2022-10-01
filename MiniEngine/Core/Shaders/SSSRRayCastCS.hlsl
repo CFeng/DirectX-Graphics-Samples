@@ -92,6 +92,6 @@ void main(uint3 DTid : SV_DispatchThreadID, uint GI : SV_GroupIndex, uint3 GTid 
     rayPDF = H.w;
     rayMask = rayTrace.w;
 
-    OutRayCast[st] = float4(rayTrace);    // float4(rayTraceHit, rayTraceZ, rayPDF);
+    OutRayCast[st] = float4(rayTraceHit, rayTraceZ, rayPDF);
     OutRayCastMask[st] = rayMask;
 }
