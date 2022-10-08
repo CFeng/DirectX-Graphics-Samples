@@ -64,5 +64,10 @@ void RayGen()
     payload.SkipShading = false;
     payload.RayHitT = FLT_MAX;
     TraceRay(g_accel, RAY_FLAG_CULL_BACK_FACING_TRIANGLES, ~0,0,1,0, rayDesc, payload);
+
+    if (payload.RayHitT < FLT_MAX)
+    {
+        g_screenOutput[DTid] = float4(payload.OutputColor, 1.0);
+    }
 }
 

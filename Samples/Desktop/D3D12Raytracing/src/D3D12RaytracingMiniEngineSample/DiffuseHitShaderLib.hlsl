@@ -288,5 +288,5 @@ void Hit(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes attr
         outputColor = g_screenOutput[DispatchRaysIndex().xy].rgb + reflectivity * outputColor;
     }
 
-    g_screenOutput[DispatchRaysIndex().xy] = float4(outputColor, 1.0);
+    payload.OutputColor = outputColor;
 }

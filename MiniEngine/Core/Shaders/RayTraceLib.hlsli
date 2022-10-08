@@ -74,7 +74,7 @@ float4 RayMarch(float4x4 unity_CameraProjection, float3 viewDir, int NumSteps, f
 	[loop]
 	for (int i = 0;  i < NumSteps; i++)
 	{
-		float depth = GetDepth(float2(samplePos.x, 1 - samplePos.y));
+		float depth = GetDepth(float2(samplePos.x, 1 - samplePos.y));	// HACK: (1 - y)
 		float delta = samplePos.z - depth;
 		//float thickness = dirProject.z / depth;
 
