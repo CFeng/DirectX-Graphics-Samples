@@ -22,7 +22,9 @@
 namespace Graphics
 {
     extern DepthBuffer g_SceneDepthBuffer;  // D32_FLOAT_S8_UINT
+    extern DepthBuffer g_PreviousSceneDepthBuffer;  // D32_FLOAT_S8_UINT
     extern ColorBuffer g_SceneColorBuffer;  // R11G11B10_FLOAT
+    extern ColorBuffer g_PreviousSceneColorBuffer;  // R11G11B10_FLOAT
     extern ColorBuffer g_SceneDiffuseOcclusionBuffer;  // R10G10B10A2_UNORM
     extern ColorBuffer g_SceneSpecularSmoothnessBuffer;  // R8G8B8A8_UNORM
     extern ColorBuffer g_SceneNormalBuffer; // R16G16B16A16_FLOAT

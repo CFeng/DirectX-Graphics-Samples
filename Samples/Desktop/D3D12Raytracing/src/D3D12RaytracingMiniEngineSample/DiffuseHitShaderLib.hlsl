@@ -153,7 +153,10 @@ float3 BarycentricCoordinates(float3 pt, float3 v0, float3 v1, float3 v2)
 [shader("closesthit")]
 void Hit(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes attr)
 {
+    float3 worldPosition = WorldRayOrigin() + WorldRayDirection() * RayTCurrent();
+
     payload.RayHitT = RayTCurrent();
+    payload.WorldPosition = worldPosition;
     if (payload.SkipShading)
     {
         return;
@@ -194,8 +197,6 @@ void Hit(inout RayPayload payload, in BuiltInTriangleIntersectionAttributes attr
     const float3 p0 = asfloat(g_attributes.Load3(info.m_positionAttributeOffsetBytes + ii.x * info.m_attributeStrideBytes));
     const float3 p1 = asfloat(g_attributes.Load3(info.m_positionAttributeOffsetBytes + ii.y * info.m_attributeStrideBytes));
     const float3 p2 = asfloat(g_attributes.Load3(info.m_positionAttributeOffsetBytes + ii.z * info.m_attributeStrideBytes));
-
-    float3 worldPosition = WorldRayOrigin() + WorldRayDirection() * RayTCurrent();
 
     //---------------------------------------------------------------------------------------------
     // Compute partial derivatives of UV coordinates:

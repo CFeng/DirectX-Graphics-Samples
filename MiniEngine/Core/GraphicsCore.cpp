@@ -352,6 +352,8 @@ void Graphics::Initialize(bool RequireDXRSupport)
 
             // RESOURCE_BARRIER_DUPLICATE_SUBRESOURCE_TRANSITIONS
             (D3D12_MESSAGE_ID)1008,
+
+            D3D12_MESSAGE_ID_COPY_DESCRIPTORS_INVALID_RANGES,
         };
 
         D3D12_INFO_QUEUE_FILTER NewFilter = {};

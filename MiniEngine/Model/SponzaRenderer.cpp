@@ -308,6 +308,8 @@ void Sponza::RenderScene(
         {
             ScopedTimer _prof2(L"Opaque", gfxContext);
             {
+                gfxContext.CopyBuffer(g_PreviousSceneDepthBuffer, g_SceneDepthBuffer);
+
                 gfxContext.TransitionResource(g_SceneDepthBuffer, D3D12_RESOURCE_STATE_DEPTH_WRITE, true);
                 gfxContext.ClearDepth(g_SceneDepthBuffer);
                 gfxContext.SetPipelineState(m_DepthPSO);
@@ -336,6 +338,8 @@ void Sponza::RenderScene(
         {
             ScopedTimer _prof(L"Main Render", gfxContext);
             {
+                gfxContext.CopyBuffer(g_PreviousSceneColorBuffer, g_SceneColorBuffer);
+
                 gfxContext.TransitionResource(g_SceneColorBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
                 gfxContext.TransitionResource(g_SceneDiffuseOcclusionBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
                 gfxContext.TransitionResource(g_SceneSpecularSmoothnessBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET, true);

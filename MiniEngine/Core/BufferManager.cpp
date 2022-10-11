@@ -21,7 +21,9 @@
 namespace Graphics
 {
     DepthBuffer g_SceneDepthBuffer;
+    DepthBuffer g_PreviousSceneDepthBuffer;
     ColorBuffer g_SceneColorBuffer;
+    ColorBuffer g_PreviousSceneColorBuffer;
     ColorBuffer g_SceneDiffuseOcclusionBuffer;
     ColorBuffer g_SceneSpecularSmoothnessBuffer;
     ColorBuffer g_SceneNormalBuffer;
@@ -125,6 +127,7 @@ void Graphics::InitializeRenderingBuffers( uint32_t bufferWidth, uint32_t buffer
     esram.PushStack();
 
         g_SceneColorBuffer.Create( L"Main Color Buffer", bufferWidth, bufferHeight, 1, DefaultHdrColorFormat, esram );
+        g_PreviousSceneColorBuffer.Create(L"Previous Main Color Buffer", bufferWidth, bufferHeight, 1, DefaultHdrColorFormat, esram);
         g_SceneDiffuseOcclusionBuffer.Create(L"Diffuse Occlusion Buffer", bufferWidth, bufferHeight, 1, DXGI_FORMAT_R10G10B10A2_UNORM, esram);
         g_SceneSpecularSmoothnessBuffer.Create(L"Specular Smoothness Buffer", bufferWidth, bufferHeight, 1, DXGI_FORMAT_R8G8B8A8_UNORM, esram);
         g_SceneNormalBuffer.Create( L"Normals Buffer", bufferWidth, bufferHeight, 1, DXGI_FORMAT_R16G16B16A16_FLOAT, esram );
@@ -140,6 +143,7 @@ void Graphics::InitializeRenderingBuffers( uint32_t bufferWidth, uint32_t buffer
             g_MinMaxDepth32.Create(L"MinMaxDepth 32x32", bufferWidth5, bufferHeight5, 1, DXGI_FORMAT_R32_UINT, esram );
 
             g_SceneDepthBuffer.Create( L"Scene Depth Buffer", bufferWidth, bufferHeight, DSV_FORMAT, esram );
+            g_PreviousSceneDepthBuffer.Create(L"Previous Scene Depth Buffer", bufferWidth, bufferHeight, DSV_FORMAT, esram);
 
             esram.PushStack(); // Begin opaque geometry
 
@@ -278,7 +282,9 @@ void Graphics::ResizeDisplayDependentBuffers(uint32_t NativeWidth, uint32_t Nati
 void Graphics::DestroyRenderingBuffers()
 {
     g_SceneDepthBuffer.Destroy();
+    g_PreviousSceneDepthBuffer.Destroy();
     g_SceneColorBuffer.Destroy();
+    g_PreviousSceneColorBuffer.Destroy();
     g_SceneDiffuseOcclusionBuffer.Destroy();
     g_SceneSpecularSmoothnessBuffer.Destroy();
     g_SceneNormalBuffer.Destroy();

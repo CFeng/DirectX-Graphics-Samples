@@ -8,6 +8,7 @@ struct RayPayload
     bool SkipShading;
     float RayHitT;
     float3 OutputColor;
+    float3 WorldPosition;
 };
 
 #endif
@@ -17,6 +18,7 @@ struct RayPayload
 struct DynamicCB
 {
     float4x4 cameraToWorld;
+    float4x4 worldToCamera;
     float3   worldCameraPosition;
     uint     padding;
     float2   resolution;

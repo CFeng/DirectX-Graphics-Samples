@@ -242,7 +242,7 @@ private:
 
     void RaytraceDiffuse(GraphicsContext& context, const Math::Camera& camera, ColorBuffer& colorTarget);
     void RaytraceShadows(GraphicsContext& context, const Math::Camera& camera, ColorBuffer& colorTarget, DepthBuffer& depth);
-    void RaytraceReflections(GraphicsContext& context, const Math::Camera& camera, ColorBuffer& colorTarget, DepthBuffer& depth, ColorBuffer& normals);
+    void RaytraceReflections(GraphicsContext& context, const Math::Camera& camera, ColorBuffer& colorTarget, ColorBuffer& prevColor, DepthBuffer& depth, DepthBuffer& prevDepth, ColorBuffer& normals);
 
     Camera m_Camera;
     std::unique_ptr<FlyingFPSCamera> m_CameraController;
@@ -449,6 +449,15 @@ void InitializeViews(const ModelH3D& model)
         UINT unused;
         g_pRaytracingDescriptorHeap->AllocateDescriptor(srvHandle, unused);
         Graphics::g_Device->CopyDescriptorsSimple(1, srvHandle, g_SceneNormalBuffer.GetSRV(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+        g_pRaytracingDescriptorHeap->AllocateDescriptor(srvHandle, unused);
+        Graphics::g_Device->CopyDescriptorsSimple(1, srvHandle, g_VelocityBuffer.GetSRV(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+        g_pRaytracingDescriptorHeap->AllocateDescriptor(srvHandle, unused);
+        Graphics::g_Device->CopyDescriptorsSimple(1, srvHandle, g_PreviousSceneColorBuffer.GetSRV(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+        g_pRaytracingDescriptorHeap->AllocateDescriptor(srvHandle, unused);
+        Graphics::g_Device->CopyDescriptorsSimple(1, srvHandle, g_PreviousSceneDepthBuffer.GetDepthSRV(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     }
 
     {
@@ -567,7 +576,7 @@ void InitializeRaytracingStateObjects(const ModelH3D &model, UINT numMeshes)
 
     D3D12_DESCRIPTOR_RANGE1 srvDescriptorRange = {};
     srvDescriptorRange.BaseShaderRegister = 12;
-    srvDescriptorRange.NumDescriptors = 2;
+    srvDescriptorRange.NumDescriptors = 5;
     srvDescriptorRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
     srvDescriptorRange.Flags = D3D12_DESCRIPTOR_RANGE_FLAG_NONE;
 
@@ -640,7 +649,7 @@ void InitializeRaytracingStateObjects(const ModelH3D &model, UINT numMeshes)
     SetDxilLibrary(stateObjectDesc, g_pmissShaderLib, missExportName);
 
     auto shaderConfigStateObject = stateObjectDesc.CreateSubobject<CD3DX12_RAYTRACING_SHADER_CONFIG_SUBOBJECT>();
-    UINT payloadSize = 5 * sizeof(float);   // bool + float + float3
+    UINT payloadSize = 8 * sizeof(float);   // size of RayPayload: bool + float + float3 + float3
     shaderConfigStateObject->Config(payloadSize, 8);
 
     LPCWSTR hitGroupExportName = L"HitGroup";
@@ -755,6 +764,13 @@ void D3D12RaytracingMiniEngineSample::Startup( void )
     Renderer::Initialize();
 
     Sponza::Startup(m_Camera);
+
+    // HACK!!
+    const float D2R = 3.1415926535897932384626433832795f / 180;
+    m_Camera.SetFOV(60 * D2R);
+    m_Camera.SetPosition(Vector3(-387.6143, 81.39775, -15.60718));
+    m_Camera.SetRotation(Quaternion(-10 * D2R, (56 + 70) * D2R, 0));
+    ///////////////////////////////////////////////////////////////
 
     m_Camera.SetZRange( 1.0f, 10000.0f );
     m_CameraController.reset(new FlyingFPSCamera(m_Camera, Vector3(kYUnitVector)));
@@ -1305,7 +1321,9 @@ void D3D12RaytracingMiniEngineSample::RaytraceReflections(
     GraphicsContext& context,
     const Math::Camera& camera,
     ColorBuffer& colorTarget,
+    ColorBuffer& prevColor,
     DepthBuffer& depth, 
+    DepthBuffer& prevDepth,
     ColorBuffer& normals)
 {
     ScopedTimer _p0(L"RaytracingWithHitShader", context);
@@ -1314,6 +1332,7 @@ void D3D12RaytracingMiniEngineSample::RaytraceReflections(
     DynamicCB inputs = g_dynamicCb;
     auto m0 = camera.GetViewProjMatrix();
     auto m1 = Transpose(Invert(m0));
+    memcpy(&inputs.worldToCamera, &Transpose(m0), sizeof(inputs.worldToCamera));
     memcpy(&inputs.cameraToWorld, &m1, sizeof(inputs.cameraToWorld));
     memcpy(&inputs.worldCameraPosition, &camera.GetPosition(), sizeof(inputs.worldCameraPosition));
     inputs.resolution.x = (float)colorTarget.GetWidth();
@@ -1335,6 +1354,9 @@ void D3D12RaytracingMiniEngineSample::RaytraceReflections(
     context.TransitionResource(depth, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
     context.TransitionResource(g_ShadowBuffer, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
     context.TransitionResource(normals, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
+    context.TransitionResource(g_VelocityBuffer, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
+    context.TransitionResource(prevColor, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
+    context.TransitionResource(prevDepth, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
     context.TransitionResource(g_hitConstantBuffer, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
     context.TransitionResource(colorTarget, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
     context.FlushResourceBarriers();
@@ -1404,7 +1426,7 @@ void D3D12RaytracingMiniEngineSample::Raytrace(class GraphicsContext& gfxContext
         break;
 
     case RTM_REFLECTIONS:
-        RaytraceReflections(gfxContext, m_Camera, g_SceneColorBuffer, g_SceneDepthBuffer, g_SceneNormalBuffer);
+        RaytraceReflections(gfxContext, m_Camera, g_SceneColorBuffer, g_PreviousSceneColorBuffer, g_SceneDepthBuffer, g_PreviousSceneDepthBuffer, g_SceneNormalBuffer);
         break;
     }
 

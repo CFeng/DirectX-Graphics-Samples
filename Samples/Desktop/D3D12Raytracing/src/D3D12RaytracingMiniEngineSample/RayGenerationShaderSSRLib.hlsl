@@ -11,9 +11,13 @@
 
 #define HLSL
 #include "ModelViewerRaytracing.h"
+#include "../../../../../MiniEngine/Core/Shaders/PixelPacking_Velocity.hlsli"
 
 Texture2D<float>    depth    : register(t12);
 Texture2D<float4>   normals  : register(t13);
+Texture2D<packed_velocity_t> VelocityBuffer : register(t14);
+Texture2D<float4>   prevColor : register(t15);
+Texture2D<float>    prevDepth : register(t16);
 
 [shader("raygeneration")]
 void RayGen()
@@ -67,7 +71,30 @@ void RayGen()
 
     if (payload.RayHitT < FLT_MAX)
     {
-        g_screenOutput[DTid] = float4(payload.OutputColor, 1.0);
+        float4 camPos = mul(g_dynamic.worldToCamera, float4(payload.WorldPosition, 1));
+        camPos /= camPos.w;
+
+        float2 ST = (camPos.xy + 1.0) * 0.5 * g_dynamic.resolution - 0.5;
+        ST.y = g_dynamic.resolution.y - ST.y;
+
+        float f = step(0, ST.x) * step(0, ST.y) * step(ST.x, g_dynamic.resolution.x - 1) * step(ST.y, g_dynamic.resolution.y - 1);
+
+        //g_screenOutput[DTid] = float4((camPos.xy + 1.0) * 0.5, 0, 1);
+        //if (ST.x >= 0 && ST.x < g_dynamic.resolution)
+        //{
+        float3 Velocity = UnpackVelocity(VelocityBuffer[ST]);
+
+        float temporalDepth = prevDepth[ST + Velocity.xy] + Velocity.z;
+        //float4 temporalColor = prevColor[DTid + Velocity.xy];
+
+        f *= step(temporalDepth - 0.001, camPos.z);
+
+        float reflectivity = normals[DTid].w;
+        float3 outputColor = g_screenOutput[DTid].rgb + reflectivity * prevColor[ST + Velocity.xy].rgb;
+
+        g_screenOutput[DTid] = float4(f * outputColor + (1 - f) * payload.OutputColor, 1.0);
+        //}
+        //g_screenOutput[DTid] = float4(payload.OutputColor, 1.0);
     }
 }
 
