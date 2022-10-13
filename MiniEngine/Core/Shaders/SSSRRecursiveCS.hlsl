@@ -35,10 +35,9 @@ cbuffer CB1 : register(b1)
 void main(uint3 DTid : SV_DispatchThreadID, uint GI : SV_GroupIndex, uint3 GTid : SV_GroupThreadID, uint3 Gid : SV_GroupID)
 {
     uint2 pos = DTid.xy;
-    float2 uv = (pos + 0.5) / _ScreenSize;  // STtoUV, TODO: use rcp to save the "/"?
 
     uint2 ST = DTid.xy;
     float3 Velocity = GetVelocity(ST);
-    uint2 prevST = ST - uint2(Velocity.xy);
+    uint2 prevST = ST + uint2(Velocity.xy);
     OutColor[ST] = _MainTex[prevST];
 }

@@ -54,7 +54,7 @@ void main(uint3 DTid : SV_DispatchThreadID, uint GI : SV_GroupIndex, uint3 GTid 
 //	else
 		velocity = GetVelocity(pos) / _ScreenSize; // 5.4 motion vector
 
-	float2 prevUV = uv - velocity;
+	float2 prevUV = uv + velocity;
 
 	float4 current = _MainTex.SampleLevel(PointSampler, uv, 0);
 	float4 previous = _PreviousBuffer.SampleLevel(PointSampler, prevUV, 0);
