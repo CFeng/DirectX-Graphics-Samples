@@ -1,0 +1,15 @@
+hyperbolic Z vs linear Z
+	linear: 0 = camera and 1 = far clipping plane
+	hyperbolic: 0 = far plane, 1 = near plane
+
+calc refelction vector
+ddx,ddy
+how the confidence of ray tracing is calculated?
+
+Words:
+Microfacet
+incidence - ru she jiao
+specular (mirror), glossy (rough), or diffusive reflection (matte)
+
+
+https://gitea.yiem.net/QianMo/Real-Time-Rendering-4th-Bibliography-Collection/raw/branch/main/Chapter%201-24/[1798%20][GPU%20Pro%205%202014]%20Hi-Z%20Screen-Space%20Tracing.pdf

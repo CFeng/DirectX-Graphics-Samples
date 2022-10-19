@@ -1,0 +1,67 @@
+DownsampleFrameForSSLR
+
+SSLR_ClearTiles
+RayTraceTiles first 8 is special
+
+SSLR_GenerateRays
+used ImportanceSampleGGX
+select between TILE_MASK_WATER_TRACE, TILE_MASK_HIZ_TRACE and TILE_MASK_CONE_TRACE
+RayTraceTiles after 8 is UV list for each shader variation (TILE_MASK_WATER_TRACE, TILE_MASK_HIZ_TRACE, TILE_MASK_CONE_TRACE combination)
+
+SSLR_IndirectArgs
+1, 64 (tiles per group), group count
+
+SSLR_Raytrace
+use cone angle tan to decide if we do hiz ray tracing
+output ResolvedRaysTexture, LengthTexture and RWConfidenceTexture
+
+* DXR_Raytrace
+raygeneration and closesthit
+raygeneration:
+if (sslr confidence is not enough)
+{
+	if (ray tracing hit color is avaliable)
+	{
+		if (no at the center of screen) always true??
+		{
+			use hit color or environment map as envData
+		}
+		
+		if (not out of screen and reflection point is in front)
+		{
+			ray hit point to screen space and get color from previous screen as hitData. But set confidence to 0 if the depth doesn't match.
+		}
+	}
+}
+
+if (rayConfidence > sslrConfidence)
+{
+	output ResolvedRaysTexture, LengthTexture, SSLRInputDepthTexture and RWConfidenceTexture
+}
+else
+{
+	just update RWConfidenceTexture
+}
+
+closesthit: save color of reflection hit point to payload.
+
+ApplyDXRDirectLight??
+ApplyDXRIndirectLight??
+Geometry Structure (TLAS and BLAS)
+
+--- GGX BRDF is only for specular
+
+* DXR_Raytrace_Particles
+use inline ray tracing
+output ResolvedRaysTexture, LengthTexture and RWConfidenceTexture
+
+SSLR_DownsampleReflection
+Genereate mipmap of ResolvedRaysTexture and RWConfidenceTexture
+
+SSLR_Integrate
+output ReflectionTexture, ReflectionConfidenceTexture and ReflectionMotionBuffer
+ComputeReflectionMotion???
+
+
+RenderTileLighting_Lighting
+ComputeIndirectLighting -> SampleReflectionMaps
