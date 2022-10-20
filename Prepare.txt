@@ -2,14 +2,27 @@ hyperbolic Z vs linear Z
 	linear: 0 = camera and 1 = far clipping plane
 	hyperbolic: 0 = far plane, 1 = near plane
 
-calc refelction vector
-ddx,ddy
+calc refelction vector: Reflect(V, N) = 2(V dot N)N − V
+ddx,ddy in HLSL
 how the confidence of ray tracing is calculated?
+clip space (-1, 1), screen space (0, 1), view space
+barecenter
+GPU architecture
 
 Words:
 Microfacet
 incidence - ru she jiao
 specular (mirror), glossy (rough), or diffusive reflection (matte)
+artifacts
+intersects
+interpolated
+Perspective-correct
+screen coordinate
+pseudo
+convolution
+spherical coordinates
 
+Tricks:
+ employs ray length jittering at each iteration step to hide the staircase artifacts.
 
 https://gitea.yiem.net/QianMo/Real-Time-Rendering-4th-Bibliography-Collection/raw/branch/main/Chapter%201-24/[1798%20][GPU%20Pro%205%202014]%20Hi-Z%20Screen-Space%20Tracing.pdf
