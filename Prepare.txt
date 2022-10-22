@@ -2,6 +2,21 @@ hyperbolic Z vs linear Z
 	linear: 0 = camera and 1 = far clipping plane
 	hyperbolic: 0 = far plane, 1 = near plane
 
+cone tracing vs hiz tracing
+cone has bigger step size, can jump multiple hiz levels
+hiz tracing only jump 1 level at a time
+
+Tiling only affect 2 stages: SSLR_Raytrace and SSLR_Integrate
+
+θ: theta
+ξ: xi
+φ: phi
+Importance Sampling: input: xi, roughness, output: normal of microfacet
+
+PDF: Probability Density Function
+
+BRDF: D - Normal distribution function (specular D); G/V - Geometric shadowing
+
 calc refelction vector: Reflect(V, N) = 2(V dot N)N − V
 ddx,ddy in HLSL
 how the confidence of ray tracing is calculated?
@@ -20,9 +35,18 @@ Perspective-correct
 screen coordinate
 pseudo
 convolution
-spherical coordinates
+spherical coordinates -- cartesian coordinates
+hemisphere
+precision
+anti aliasing
+theoretical
+radian -- degree
 
 Tricks:
  employs ray length jittering at each iteration step to hide the staircase artifacts.
 
 https://gitea.yiem.net/QianMo/Real-Time-Rendering-4th-Bibliography-Collection/raw/branch/main/Chapter%201-24/[1798%20][GPU%20Pro%205%202014]%20Hi-Z%20Screen-Space%20Tracing.pdf
+
+https://lukas-hermanns.info/download/bachelorthesis_ssct_lhermanns.pdf
+
+https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf

@@ -1,5 +1,7 @@
 DownsampleFrameForSSLR
 
+GenerateHiZMips
+
 SSLR_ClearTiles
 RayTraceTiles first 8 is special
 
