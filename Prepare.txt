@@ -8,14 +8,19 @@ hiz tracing only jump 1 level at a time
 
 Tiling only affect 2 stages: SSLR_Raytrace and SSLR_Integrate
 
+ResolveRay means get reflection color and depth from previous frame using velocity. Result saved in ResolvedRaysTexture.
+
+LengthTexture stores the shortest ray length includes particle
+
 θ: theta
 ξ: xi
 φ: phi
 Importance Sampling: input: xi, roughness, output: normal of microfacet
+xi comes from: Hammersley vs Halton point sets
 
 PDF: Probability Density Function
 
-BRDF: D - Normal distribution function (specular D); G/V - Geometric shadowing
+BRDF: D - Normal distribution function (specular D); G/V - Geometric shadowing; F: Fresnel
 
 calc refelction vector: Reflect(V, N) = 2(V dot N)N − V
 ddx,ddy in HLSL
@@ -41,6 +46,7 @@ precision
 anti aliasing
 theoretical
 radian -- degree
+dielectrics -- conductors
 
 Tricks:
  employs ray length jittering at each iteration step to hide the staircase artifacts.
