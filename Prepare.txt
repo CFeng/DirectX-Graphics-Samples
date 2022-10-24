@@ -1,9 +1,14 @@
+GPU architecture
+
+ddx,ddy in HLSL
+barycenter
+
 hyperbolic Z vs linear Z
 	linear: 0 = camera and 1 = far clipping plane
 	hyperbolic: 0 = far plane, 1 = near plane
 
 cone tracing vs hiz tracing
-cone has bigger step size, can jump multiple hiz levels
+cone has bigger step size, can jump multiple mip levels
 hiz tracing only jump 1 level at a time
 
 Tiling only affect 2 stages: SSLR_Raytrace and SSLR_Integrate
@@ -13,8 +18,8 @@ ResolveRay means get reflection color and depth from previous frame using veloci
 LengthTexture stores the shortest ray length includes particle
 
 θ: theta
-ξ: xi
 φ: phi
+ξ: xi
 Importance Sampling: input: xi, roughness, output: normal of microfacet
 xi comes from: Hammersley vs Halton point sets
 
@@ -23,11 +28,10 @@ PDF: Probability Density Function
 BRDF: D - Normal distribution function (specular D); G/V - Geometric shadowing; F: Fresnel
 
 calc refelction vector: Reflect(V, N) = 2(V dot N)N − V
-ddx,ddy in HLSL
 how the confidence of ray tracing is calculated?
 clip space (-1, 1), screen space (0, 1), view space
-barecenter
-GPU architecture
+
+VGPR (Vector registers) -- SGPR (Scalar registers)
 
 Words:
 Microfacet
@@ -39,7 +43,6 @@ interpolated
 Perspective-correct
 screen coordinate
 pseudo
-convolution
 spherical coordinates -- cartesian coordinates
 hemisphere
 precision
@@ -47,6 +50,7 @@ anti aliasing
 theoretical
 radian -- degree
 dielectrics -- conductors
+axis
 
 Tricks:
  employs ray length jittering at each iteration step to hide the staircase artifacts.
@@ -56,3 +60,54 @@ https://gitea.yiem.net/QianMo/Real-Time-Rendering-4th-Bibliography-Collection/ra
 https://lukas-hermanns.info/download/bachelorthesis_ssct_lhermanns.pdf
 
 https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+微表面
+入射角
+高光
+瑕疵
+相交
+插值
+透视纠正
+屏幕坐标
+伪代码
+球坐标 -- 笛卡尔坐标
+半球
+精度
+反锯齿
+理论上
+弧度 -- 角度
+电解质 -- 导体
+轴
