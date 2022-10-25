@@ -16,6 +16,7 @@ SSLR_IndirectArgs
 SSLR_Raytrace
 use cone angle tan to decide if we do hiz ray tracing
 output ResolvedRaysTexture, LengthTexture and RWConfidenceTexture
+do ParticlesTrace
 
 * DXR_Raytrace
 raygeneration and closesthit
@@ -48,6 +49,7 @@ else
 closesthit: save color of reflection hit point to payload.
 
 ApplyDXRDirectLight??
+	BRDF: ray dir as view dir, face normal, sun as light [vertex.normal, vertex.reflectance, vertex.color, vertex.metallic, vertex.smoothness]
 ApplyDXRIndirectLight??
 Geometry Structure (TLAS and BLAS)
 

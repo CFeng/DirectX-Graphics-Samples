@@ -21,7 +21,7 @@ LengthTexture stores the shortest ray length includes particle
 φ: phi
 ξ: xi
 Importance Sampling: input: xi, roughness, output: normal of microfacet
-xi comes from: Hammersley vs Halton point sets
+xi comes from: Hammersley vs Halton point sets which generates a series of random numbers with a more uniform distribution
 
 PDF: Probability Density Function
 
@@ -51,6 +51,9 @@ theoretical
 radian -- degree
 dielectrics -- conductors
 axis
+diminishing returns
+Hammersley Sequence
+recursively
 
 Tricks:
  employs ray length jittering at each iteration step to hide the staircase artifacts.
@@ -61,10 +64,17 @@ https://lukas-hermanns.info/download/bachelorthesis_ssct_lhermanns.pdf
 
 https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
 
+Questions:
+Why there is noise in RT?
+The rendering equation is a very complicated equation. It is an integral of serveral equations over the hemisphere. There is incoming radiance which might have a really complicated visibility term. BRDF is tricky to sample. In terms of global illumication, the incoming radiance itself is also recersively defined as the outgoing radiance as some other surface point in the scene. Need to have at least hundreds of samples to get some clean image. But in reality we can only have 1-2 samplea per pixel (SPP).
+
+How to denoise:
+Accumulation: TAA
+Blur: 9 samples from resolved ray buffer, merge with weight. And merge with lower leverl mipmap.
+Truncated distribution sampling.
 
 
-
-
+How reflection system works in short.
 
 
 
@@ -111,3 +121,5 @@ https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_ep
 弧度 -- 角度
 电解质 -- 导体
 轴
+收益递减
+递归
