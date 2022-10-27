@@ -272,7 +272,7 @@ enum RaytracingMode
     RTM_DIFFUSE_WITH_SHADOWRAYS,
     RTM_REFLECTIONS,
 };
-EnumVar rayTracingMode("Application/Raytracing/RayTraceMode", RTM_DIFFUSE_WITH_SHADOWMAPS, _countof(rayTracingModes), rayTracingModes);
+EnumVar rayTracingMode("Application/Raytracing/RayTraceMode", RTM_REFLECTIONS, _countof(rayTracingModes), rayTracingModes);
 
 class DescriptorHeapStack
 {
@@ -700,6 +700,13 @@ void D3D12RaytracingMiniEngineSample::Startup( void )
     Renderer::Initialize();
 
     Sponza::Startup(m_Camera);
+
+    // HACK!!
+    const float D2R = 3.1415926535897932384626433832795f / 180;
+    m_Camera.SetFOV(60 * D2R);
+    m_Camera.SetPosition(Vector3(-200, 81.39775, -150));
+    m_Camera.SetRotation(Quaternion(-10 * D2R, (56 + 70) * D2R, 0));
+    ///////////////////////////////////////////////////////////////
 
     m_Camera.SetZRange( 1.0f, 10000.0f );
     m_CameraController.reset(new FlyingFPSCamera(m_Camera, Vector3(kYUnitVector)));
