@@ -2,14 +2,14 @@
 #include "HlslCompat.h"
 #endif
 
-#ifdef HLSL
+#ifndef HLSL
+__declspec(align(4))
+#endif
 struct RayPayload
 {
     bool SkipShading;
     float RayHitT;
 };
-
-#endif
 
 #pragma once
 // Volatile part (can be split into its own CBV). 

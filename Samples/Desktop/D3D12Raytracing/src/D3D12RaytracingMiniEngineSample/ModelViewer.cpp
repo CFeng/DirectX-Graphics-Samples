@@ -586,7 +586,8 @@ void InitializeRaytracingStateObjects(const ModelH3D &model, UINT numMeshes)
     SetDxilLibrary(stateObjectDesc, g_pmissShaderLib, missExportName);
 
     auto shaderConfigStateObject = stateObjectDesc.CreateSubobject<CD3DX12_RAYTRACING_SHADER_CONFIG_SUBOBJECT>();
-    shaderConfigStateObject->Config(8, 8);
+    UINT payloadSize = sizeof(RayPayload);
+    shaderConfigStateObject->Config(payloadSize, 8);
 
     LPCWSTR hitGroupExportName = L"HitGroup";
     auto hitGroupSubobject = stateObjectDesc.CreateSubobject<CD3DX12_HIT_GROUP_SUBOBJECT>();
