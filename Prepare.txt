@@ -33,6 +33,8 @@ clip space (-1, 1), screen space (0, 1), view space
 
 VGPR (Vector registers) -- SGPR (Scalar registers)
 
+albedo is reﬂectivity of the surface.
+
 Words:
 Microfacet
 incidence - ru she jiao
@@ -54,6 +56,14 @@ axis
 diminishing returns
 Hammersley Sequence
 recursively
+PSO: pipeline state object
+RS: root signature
+Energy Conservation
+refraction
+grazing angle
+Numerator and denominator
+primitives
+vertices 
 
 Tricks:
  employs ray length jittering at each iteration step to hide the staircase artifacts.
@@ -75,8 +85,14 @@ Truncated distribution sampling.
 
 
 How reflection system works in short.
-
-
+1. find out which pixels need reflection.
+2. shot screen space rays on these pixels.
+3. find the hit point color from previous frame, then if DXR partical tracing is not enabled, do screen space particle tracing.
+4. if DXR is enabled, and if sslr result has low confidence, shot DXR ray.
+5. update the resolved ray buffer with the lit color of ray hit point.
+6. do DXR particle ray tracing
+7. integrate results: blur, TAA
+8. apply the reflection in lighting stage.
 
 
 
@@ -123,3 +139,6 @@ How reflection system works in short.
 轴
 收益递减
 递归
+能量守恒
+折射
+分子，分母

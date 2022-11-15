@@ -1,0 +1,47 @@
+O(?)
+std containers
+red-black tree
+smart pointer
+lambda
+template
+why not exception
+mutli-thread; mutex; race condition; deadlock
+struct align
+volatile and mutable
+RTTI runtime type information
+static_cast; dynamic_cast; const_cast; reinterpret_cast 
+function overloading and overriding
+size of an empty class
+virtual inheritance
+why calling C in C++ need "extern "C""
+&& rvalue reference; std::move std::forward
+polymorphism
+public function overrided as private
+UE4 function reflection
+vtable 
+overloaded operator
+
+std::variant ?? std::visit ??
+
+why destractor should be virtual function.
+
+How DynamicCast and CDynamicType is implemented.
+Hierarchy Info: list of parents
+
+Word:
+reinterpret
+deprecated
+colon
+brackets
+dangling pointer
+derive (C++ class)
+array
+implicit
+explicit (key word)
+ampersand
+volatile
+mutable
+move semantics
+polymorphism
+instantiate
+Unary/Binary
